@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+  <style>
+    .my-img {
+      width: 160px;
+      border-radius: 50%;
+    }
+
+    #secPage {
+      display: none;
+    }
+
+    .clr {
+      background: #FED8B1;
+    }
+
+    #file {
+      position: relative;
+      bottom: 44px;
+      visibility: hidden;
+    }
+
+    #profile:hover~#file {
+      visibility: visible;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- mainPage  -->
+  <div class="container" id="mainPage">
+    <h3 class="mb-0  text-center my-3">Resume Generator</h3>
+    <p class="text-center ">"Fill your information and get your resume in no time"</p>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Personal Info</h5>
+          <label for="name" class="form-label mt-1 mb-0">Your Name</label>
+          <input type="text" class="form-control" id="nameIn" placeholder="Enter here">
+          <label for="phone" class="form-label mt-1 mb-0">Your Phone</label>
+          <input type="text" class="form-control" id="conIn" placeholder="Enter here">
+          <label for="address" class="form-label mt-1 mb-0">Your Address</label><br>
+          <textarea id="addIn" rows="2" placeholder="Enter here" class="w-100 form-control"></textarea>
+          <h6 class="mt-1">Imhportant Links</h6>
+          <label for="fblink" class="form-label mt-1 mb-0">Facebook</label>
+          <input type="text" class="form-control" id="fbIn" placeholder="Enter here">
+          <label for="instalink" class="form-label mt-1 mb-0">Instagram</label>
+          <input type="text" class="form-control" id="instaIn" placeholder="Enter here">
+          <label for="linkedinlink" class="form-label mt-1 mb-0">Linkedin</label>
+          <input type="text" class="form-control" id="linIn" placeholder="Enter here">
+
+        </div>
+        <div class="col-md-6">
+          <h5>Professional Info</h5>
+          <label for="objective" class="form-label mt-1 mb-0">Objective</label><br>
+          <textarea id="objectiveIn" rows="2" placeholder="Enter here" class="w-100 form-control"></textarea>
+
+          <div class="form-group" id="we">
+            <label for="workexperience" class="form-label mt-1 mb-0">Work Experience</label><br>
+            <textarea rows="2" placeholder="Enter here" class="w-100 form-control workIn"></textarea>
+            <div class="container text-center" id="weBtn">
+              <button type="button" class="btn btn-outline-dark w-10 py-0 mt-2 px-2" onclick="addnewWE()">Add</button>
+            </div>
+          </div>
+          <!-- add    -->
+          <div class="form-group" id="aq">
+            <label for="Acadmicqualification" class="form-label mt-1 mb-0">Acadmic Qualification</label><br>
+            <textarea rows="2" placeholder="Enter here" class="w-100 form-control acadmicIn"></textarea>
+            <div class="container text-center" id="aqBtn">
+              <button type="button" class="btn btn-outline-dark w-10 py-0 mt-2 px-2" onclick="addnewAQ()">Add</button>
+            </div>
+          </div>
+          <!-- add  -->
+
+        </div>
+      </div>
+    </div>
+    <div class="container text-center">
+      <button type="button" class="btn btn-outline-dark my-5" onclick="createCV()">Generate CV</button>
+    </div>
+  </div>
+
+  <!-- secPage -->
+  <div class="container my-5 pb-5" id="secPage">
+    <div class="row">
+      <div class="col-md-4 text-center clr pb-3">
+        <!-- <div class="imgDiv"> -->
+        <img src="img.jpg.jpeg" alt="passportsizephoto" id="profile" class="img-fluid py-3 my-img"> <br>
+        <input type="file" id="file" style="width:97px;">
+        <!-- <label for="file" id="uploadBtn">Choose Photo</label> -->
+        <!-- </div> -->
+
+        <p id="nameOut"></p>
+        <p id="conOut"></p>
+        <p id="addOut"></p>
+        <a href="#" id="fbOut"></a>
+        <a href="#" id="instaOut"></a>
+        <a href="#" id="linOut"></a>
+
+        <!-- <p id="nameOut">Mohd Shavez</p>
+          <p id="conOut">+91-9989887787, +91-8878779989</p>
+          <p id="addOut">425/302 wazir bagh, Lucknow 226003</p>
+          <a href="#" id="fbOut">Facebook</a>
+          <a href="#" id="instaOut">Instagram</a>
+          <a href="#" id="linOut">Linkedin</a> -->
+      </div>
+      <div class="col-md-8 ">
+        <h4 class="pt-4" id="bignameOut"></h4>
+
+        <div class="container border p-0 mt-3">
+          <h5 class="p-3 clr">Objective</h5>
+          <p class="px-3" id="objectiveOut"> </p>
+        </div>
+        <div class="container border p-0 mt-3">
+          <h5 class="p-3 clr">Work Experience</h5>
+          <div>
+            <ul id="weULLI">
+            </ul>
+          </div>
+        </div>
+        <div class="container border p-0 mt-3">
+          <h5 class="p-3 clr">Acadmic Qualification</h5>
+          <div>
+            <ul id="aqULLI">
+            </ul>
+          </div>
+        </div>
+        <div class="container text-center">
+          <button type="button" class="btn btn-outline-secondary w-10 mt-5 py-0 px-3" onclick="printcv()">Print</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
