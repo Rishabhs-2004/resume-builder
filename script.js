@@ -404,52 +404,89 @@ if (fileInput) {
 
 function downloadPDF() {
   const element = document.getElementById('resumePaper');
+  const body = document.body;
 
-  // Clone the element to avoid altering the live view and to fix responsive scaling issues
+  // Clone the element
   const clone = element.cloneNode(true);
 
-  // Create a hidden container for the clone ensures it renders at full A4 size
+  // Create a visible container for the clone to ensure capturing works on all devices
+  // We place it on top of the current view (z-index high) but transparent to user interaction if possible?
+  // Actually, showing it for a split second is better than it failing.
+  // We'll use a white background to cover the app while generating.
   const container = document.createElement('div');
-  container.style.position = 'fixed';
-  container.style.top = '-10000px';
-  container.style.left = '0';
-  container.style.zIndex = '-1';
-  container.style.width = '794px'; // Enforce A4 width (approx 96 DPI)
+  Object.assign(container.style, {
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    width: '100vw',
+    height: '100vh',
+    zIndex: '99999',
+    background: '#333', // Dark background to focus on the paper
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    overflow: 'auto',
+    padding: '20px'
+  });
 
-  // Reset transforms that cause blank pages on mobile
-  clone.style.transform = 'none';
-  clone.style.margin = '0';
-  clone.style.boxShadow = 'none';
-  clone.style.width = '100%';
-  clone.style.height = 'auto';
-  clone.style.minHeight = '1123px'; // Enforce A4 height
+  // Style the clone to enforce A4 dimensions without scaling
+  Object.assign(clone.style, {
+    transform: 'none',
+    width: '794px',
+    minHeight: '1123px',
+    height: 'auto',
+    margin: '0 auto',
+    boxShadow: 'none',
+    background: 'white',
+    position: 'relative' // Ensure it flows correctly in container
+  });
+
+  // Add a 'generating' loading text
+  const loading = document.createElement('div');
+  loading.innerText = 'Generating PDF... Please wait.';
+  Object.assign(loading.style, {
+    position: 'fixed',
+    top: '10px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    color: 'white',
+    zIndex: '100000',
+    fontFamily: 'sans-serif',
+    background: 'rgba(0,0,0,0.8)',
+    padding: '10px 20px',
+    borderRadius: '5px'
+  });
 
   container.appendChild(clone);
-  document.body.appendChild(container);
+  body.appendChild(container);
+  body.appendChild(loading);
 
   const opt = {
-    margin: 0,
+    margin: 0, // No margin to avoid extra pages
     filename: 'resume.pdf',
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: {
       scale: 2,
       useCORS: true,
       scrollY: 0,
-      windowWidth: 794 // Emulate desktop width for correct layout
+      windowWidth: 794 // Match the A4 width
     },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: 'avoid-all' } // Avoid breaking elements awkwardly
   };
 
-  html2pdf().set(opt).from(clone).save().then(() => {
-    document.body.removeChild(container);
-  }).catch(err => {
-    console.error("PDF generation error:", err);
-    // Cleanup even on error
-    if (document.body.contains(container)) {
-      document.body.removeChild(container);
-    }
-    alert("Sorry, there was an error generating the PDF. Please try again.");
-  });
+  // Wait a brief moment to ensure styles are applied and fonts rendered
+  setTimeout(() => {
+    html2pdf().set(opt).from(clone).save().then(() => {
+      body.removeChild(container);
+      body.removeChild(loading);
+    }).catch(err => {
+      console.error("PDF generation error:", err);
+      if (body.contains(container)) body.removeChild(container);
+      if (body.contains(loading)) body.removeChild(loading);
+      alert("Error generating PDF. Please try again.");
+    });
+  }, 500); // 500ms delay
 }
 
 function resetForm() {
