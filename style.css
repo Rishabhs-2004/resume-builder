@@ -59,6 +59,41 @@ h6 {
     .app-container {
         grid-template-columns: 1fr;
         height: auto;
+        gap: 1.5rem;
+    }
+
+    .preview-section {
+        position: relative;
+        top: 0;
+        height: auto;
+    }
+
+    .resume-paper {
+        transform-origin: top center;
+    }
+}
+
+@media (max-width: 640px) {
+    .app-container {
+        padding: 1rem;
+    }
+
+    .form-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .form-header>div {
+        width: 100%;
+    }
+
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .res-btn-group {
+        flex-direction: column;
     }
 }
 
@@ -206,13 +241,19 @@ textarea:focus {
 
 @media (max-width: 1400px) {
     .resume-paper {
-        transform: scale(0.85);
+        transform: scale(0.75);
+        margin-bottom: -250px;
     }
 }
 
 @media (max-width: 1200px) {
     .resume-paper {
-        transform: scale(0.7);
+        transform: scale(0.60);
+        margin-bottom: -400px;
+    }
+
+    .app-container {
+        gap: 1.5rem;
     }
 }
 
@@ -481,47 +522,77 @@ textarea:focus {
     color: white;
 }
 
+.lang-entry,
+.skill-entry {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Button Group */
+.btn-group {
+    display: flex;
+    gap: 10px;
+}
+
 @media (max-width: 1024px) {
-    .app-container {
-        grid-template-columns: 1fr;
-        height: auto;
-        padding: 1rem;
-    }
 
-    .preview-section {
-        position: relative;
-        top: 0;
-        height: auto;
-        margin-top: 2rem;
-        align-items: center;
-    }
-
-    #captureArea {
-        width: 100%;
-        overflow-x: auto;
-        padding: 1rem 0;
-        justify-content: center;
-    }
-
+    /* Already handled in previous block, adding specific overrides if needed */
     .resume-paper {
-        transform: scale(0.6) !important;
-        transform-origin: top center;
-        margin-bottom: -400px;
-        width: 794px;
-        min-width: 794px;
+        transform: scale(0.65);
+        margin-bottom: -350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .resume-paper {
+        transform: scale(0.55);
+        margin-bottom: -450px;
+    }
+
+    .btn-group {
+        flex-direction: column;
+    }
+
+    .lang-entry,
+    .skill-entry {
+        flex-wrap: wrap;
+    }
+
+    .lang-entry input,
+    .lang-entry select,
+    .skill-entry input,
+    .skill-entry input[type="range"] {
+        flex: 1 1 100%;
+        width: 100%;
     }
 }
 
 @media (max-width: 600px) {
     .resume-paper {
-        transform: scale(0.45) !important;
+        transform: scale(0.45);
         margin-bottom: -600px;
     }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 450px) {
     .resume-paper {
-        transform: scale(0.35) !important;
-        margin-bottom: -700px;
+        transform: scale(0.38);
+        margin-bottom: -680px;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .resume-paper {
+        transform: scale(0.32);
+        margin-bottom: -750px;
     }
 }

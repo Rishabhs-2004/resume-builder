@@ -85,9 +85,6 @@ function addRankedSkill() {
   const container = document.getElementById('rankedSkillsContainer');
   const div = document.createElement('div');
   div.className = 'skill-entry mb-2';
-  div.style.display = 'flex';
-  div.style.alignItems = 'center';
-  div.style.gap = '10px';
   div.innerHTML = `
         <input type="text" class="skillName" placeholder="Skill" oninput="updatePreview()" style="flex:2">
         <input type="range" class="skillLevel" min="20" max="100" value="80" oninput="updatePreview()" style="flex:1">
@@ -107,8 +104,6 @@ function addLanguage() {
   const container = document.getElementById('langContainer');
   const div = document.createElement('div');
   div.className = 'lang-entry mb-2';
-  div.style.display = 'flex';
-  div.style.gap = '10px';
   div.innerHTML = `
         <input type="text" class="langName" placeholder="Language" oninput="updatePreview()">
         <select class="langLevel" oninput="updatePreview()" style="width: 120px; padding: 0.5rem; border-radius: 8px; border: 1.5px solid var(--border-color); background: transparent; color: var(--text-main);">
