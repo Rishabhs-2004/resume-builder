@@ -1,4 +1,4 @@
-// Theme Management
+// Theme & Template Management
 function toggleTheme() {
   const body = document.body;
   const currentTheme = body.getAttribute('data-theme');
@@ -7,6 +7,26 @@ function toggleTheme() {
 
   const themeBtn = document.querySelector('.theme-toggle i');
   themeBtn.className = newTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+}
+
+function changeThemeColor(color) {
+  document.documentElement.style.setProperty('--primary-color', color);
+  saveToLocalStorage();
+}
+
+function changeTemplate(type) {
+  const container = document.querySelector('.resume-container');
+  if (type === 'modern') {
+    container.style.display = 'block';
+    document.querySelector('.sidebar').style.width = '100%';
+    document.querySelector('.sidebar').style.padding = '1.5rem';
+    document.querySelector('.main-content').style.padding = '1.5rem';
+  } else {
+    container.style.display = 'grid';
+    container.style.gridTemplateColumns = '30% 70%';
+    document.querySelector('.sidebar').style.width = '';
+  }
+  saveToLocalStorage();
 }
 
 // Dynamic Field Management
@@ -51,6 +71,24 @@ function addProject() {
   container.appendChild(div);
 }
 
+function addLanguage() {
+  const container = document.getElementById('langContainer');
+  const div = document.createElement('div');
+  div.className = 'lang-entry mb-2';
+  div.style.display = 'flex';
+  div.style.gap = '10px';
+  div.innerHTML = `
+        <input type="text" class="langName" placeholder="Language" oninput="updatePreview()">
+        <select class="langLevel" oninput="updatePreview()" style="width: 120px; padding: 0.5rem; border-radius: 8px; border: 1.5px solid var(--border-color); background: transparent; color: var(--text-main);">
+              <option value="Native">Native</option>
+              <option value="Fluent">Fluent</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Basic">Basic</option>
+        </select>
+    `;
+  container.appendChild(div);
+}
+
 const AI_SUMMARIES = {
   "default": "A highly motivated and detail-oriented professional with a strong foundation in problem-solving and a passion for continuous learning. Seeking to leverage skills in a challenging environment to drive innovation and growth.",
   "developer": "Passionate Software Developer with expertise in modern web technologies. Experienced in building scalable applications, optimizing performance, and collaborating in agile teams to deliver high-quality software solutions.",
@@ -69,7 +107,6 @@ function aiSuggestSummary() {
   document.getElementById('objectiveIn').value = suggestion;
   updatePreview();
 
-  // Visual feedback
   const btn = document.querySelector('[onclick="aiSuggestSummary()"]');
   const originalText = btn.innerHTML;
   btn.innerHTML = '<i class="fas fa-check"></i> Improved!';
@@ -100,7 +137,6 @@ function updatePreview() {
     const title = entry.querySelector('.projectTitle').value;
     const link = entry.querySelector('.projectLink').value;
     const desc = entry.querySelector('.projectDesc').value;
-
     if (title) {
       projectHtml += `
                 <div class="experience-item">
@@ -123,7 +159,6 @@ function updatePreview() {
     const company = entry.querySelector('.weCompany').value;
     const date = entry.querySelector('.weDate').value;
     const desc = entry.querySelector('.weDesc').value;
-
     if (title || company) {
       weHtml += `
                 <div class="experience-item">
@@ -145,7 +180,6 @@ function updatePreview() {
     const degree = entry.querySelector('.eduDegree').value;
     const school = entry.querySelector('.eduSchool').value;
     const date = entry.querySelector('.eduDate').value;
-
     if (degree || school) {
       eduHtml += `
                 <div class="education-item">
@@ -160,6 +194,18 @@ function updatePreview() {
   });
   document.getElementById('eduOut').innerHTML = eduHtml;
 
+  // Languages
+  const langEntries = document.querySelectorAll('.lang-entry');
+  let langHtml = '';
+  langEntries.forEach(entry => {
+    const name = entry.querySelector('.langName').value;
+    const level = entry.querySelector('.langLevel').value;
+    if (name) {
+      langHtml += `<p style="font-size: 0.8rem; margin-bottom: 2px;"><strong>${name}:</strong> <span style="opacity: 0.8">${level}</span></p>`;
+    }
+  });
+  document.getElementById('langOut').innerHTML = langHtml;
+
   // Skills
   const skillsIn = document.getElementById('skillsIn').value;
   if (skillsIn) {
@@ -171,42 +217,80 @@ function updatePreview() {
     document.getElementById('skillsOut').innerHTML = '';
   }
 
-  // Calculate Strength
   calculateStrength();
+  saveToLocalStorage();
 }
 
 function calculateStrength() {
   let strength = 0;
-  const fields = [
-    'nameIn', 'titleIn', 'emailIn', 'conIn', 'addIn',
-    'objectiveIn', 'skillsIn'
-  ];
-
+  const fields = ['nameIn', 'titleIn', 'emailIn', 'conIn', 'addIn', 'objectiveIn', 'skillsIn'];
   fields.forEach(f => {
-    if (document.getElementById(f).value.length > 5) strength += 10;
+    if (document.getElementById(f) && document.getElementById(f).value.length > 5) strength += 10;
   });
-
   if (document.querySelectorAll('.experience-entry').length > 1) strength += 15;
   if (document.querySelectorAll('.project-entry').length > 1) strength += 15;
-
   strength = Math.min(strength, 100);
-
   const bar = document.getElementById('strengthBar');
   const text = document.getElementById('strengthText');
-  bar.style.width = strength + '%';
-  text.innerText = strength + '% Strength';
-
-  if (strength < 40) bar.style.background = '#ef4444';
-  else if (strength < 70) bar.style.background = '#f59e0b';
-  else bar.style.background = '#22c55e';
+  if (bar && text) {
+    bar.style.width = strength + '%';
+    text.innerText = strength + '% Strength';
+    if (strength < 40) bar.style.background = '#ef4444';
+    else if (strength < 70) bar.style.background = '#f59e0b';
+    else bar.style.background = '#22c55e';
+  }
 }
+
+// Global Storage Logic
+function saveToLocalStorage() {
+  const data = {
+    personal: {
+      name: document.getElementById('nameIn').value,
+      title: document.getElementById('titleIn').value,
+      email: document.getElementById('emailIn').value,
+      phone: document.getElementById('conIn').value,
+      address: document.getElementById('addIn').value,
+      lin: document.getElementById('linIn').value,
+      site: document.getElementById('siteIn').value,
+      objective: document.getElementById('objectiveIn').value,
+      skills: document.getElementById('skillsIn').value,
+    },
+    theme: {
+      color: document.getElementById('themeColor').value
+    }
+  };
+  localStorage.setItem('resumeData', JSON.stringify(data));
+}
+
+function loadFromLocalStorage() {
+  const saved = localStorage.getItem('resumeData');
+  if (saved) {
+    const data = JSON.parse(saved);
+    if (document.getElementById('nameIn')) document.getElementById('nameIn').value = data.personal.name || '';
+    if (document.getElementById('titleIn')) document.getElementById('titleIn').value = data.personal.title || '';
+    if (document.getElementById('emailIn')) document.getElementById('emailIn').value = data.personal.email || '';
+    if (document.getElementById('conIn')) document.getElementById('conIn').value = data.personal.phone || '';
+    if (document.getElementById('addIn')) document.getElementById('addIn').value = data.personal.address || '';
+    if (document.getElementById('linIn')) document.getElementById('linIn').value = data.personal.lin || '';
+    if (document.getElementById('siteIn')) document.getElementById('siteIn').value = data.personal.site || '';
+    if (document.getElementById('objectiveIn')) document.getElementById('objectiveIn').value = data.personal.objective || '';
+    if (document.getElementById('skillsIn')) document.getElementById('skillsIn').value = data.personal.skills || '';
+
+    if (data.theme && data.theme.color) {
+      document.getElementById('themeColor').value = data.theme.color;
+      changeThemeColor(data.theme.color);
+    }
+    updatePreview();
+  }
+}
+
+window.addEventListener('load', loadFromLocalStorage);
 
 // Image Handling
 document.getElementById('file').addEventListener('change', function () {
   const reader = new FileReader();
   const profileOut = document.getElementById('profileOut');
   const userPlaceholder = document.getElementById('userPlaceholder');
-
   reader.onload = function () {
     profileOut.src = reader.result;
     profileOut.style.display = 'block';
@@ -231,9 +315,9 @@ function downloadPDF() {
 
 function resetForm() {
   if (confirm('Are you sure you want to reset all data?')) {
+    localStorage.removeItem('resumeData');
     window.location.reload();
   }
 }
 
-// Initialize with some placeholders or empty
 window.onload = updatePreview;
