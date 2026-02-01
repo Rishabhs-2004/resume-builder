@@ -404,14 +404,52 @@ if (fileInput) {
 
 function downloadPDF() {
   const element = document.getElementById('resumePaper');
+
+  // Clone the element to avoid altering the live view and to fix responsive scaling issues
+  const clone = element.cloneNode(true);
+
+  // Create a hidden container for the clone ensures it renders at full A4 size
+  const container = document.createElement('div');
+  container.style.position = 'fixed';
+  container.style.top = '-10000px';
+  container.style.left = '0';
+  container.style.zIndex = '-1';
+  container.style.width = '794px'; // Enforce A4 width (approx 96 DPI)
+
+  // Reset transforms that cause blank pages on mobile
+  clone.style.transform = 'none';
+  clone.style.margin = '0';
+  clone.style.boxShadow = 'none';
+  clone.style.width = '100%';
+  clone.style.height = 'auto';
+  clone.style.minHeight = '1123px'; // Enforce A4 height
+
+  container.appendChild(clone);
+  document.body.appendChild(container);
+
   const opt = {
     margin: 0,
     filename: 'resume.pdf',
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
+    html2canvas: {
+      scale: 2,
+      useCORS: true,
+      scrollY: 0,
+      windowWidth: 794 // Emulate desktop width for correct layout
+    },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
-  html2pdf().set(opt).from(element).save();
+
+  html2pdf().set(opt).from(clone).save().then(() => {
+    document.body.removeChild(container);
+  }).catch(err => {
+    console.error("PDF generation error:", err);
+    // Cleanup even on error
+    if (document.body.contains(container)) {
+      document.body.removeChild(container);
+    }
+    alert("Sorry, there was an error generating the PDF. Please try again.");
+  });
 }
 
 function resetForm() {
