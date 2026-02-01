@@ -2,7 +2,10 @@
 
 The ultimate professional tool for creating high-impact, industry-standard resumes. Built for the modern job seeker, integrated with **AI assistance**, **ATS optimization**, and **Real-time customization**.
 
-![Landing Page](https://via.placeholder.com/1200x600?text=AI-Powered+Resume+Builder+Preview)
+## 🔗 Live Demo
+**Check out the live app here: [https://rishabhs-2004.github.io/resume-builder/](https://rishabhs-2004.github.io/resume-builder/)**
+
+---
 
 ## 🌟 Next-Generation Features
 
