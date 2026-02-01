@@ -14,22 +14,32 @@ function changeThemeColor(color) {
   saveToLocalStorage();
 }
 
+function changeFont(fontClass) {
+  const paper = document.getElementById('resumePaper');
+  paper.classList.remove('font-modern', 'font-classic', 'font-elegant');
+  paper.classList.add(fontClass);
+  saveToLocalStorage();
+}
+
 function changeTemplate(type) {
   const container = document.querySelector('.resume-container');
+  const sidebar = document.querySelector('.sidebar');
   if (type === 'modern') {
     container.style.display = 'block';
-    document.querySelector('.sidebar').style.width = '100%';
-    document.querySelector('.sidebar').style.padding = '1.5rem';
+    sidebar.style.width = '100%';
+    sidebar.style.padding = '1.5rem';
     document.querySelector('.main-content').style.padding = '1.5rem';
+    document.getElementById('qrCodeContainer').style.position = 'absolute';
   } else {
     container.style.display = 'grid';
     container.style.gridTemplateColumns = '30% 70%';
-    document.querySelector('.sidebar').style.width = '';
+    sidebar.style.width = '';
+    document.getElementById('qrCodeContainer').style.position = 'static';
   }
   saveToLocalStorage();
 }
 
-// Dynamic Field Management
+// Field Management
 function addExperience() {
   const container = document.getElementById('weContainer');
   const div = document.createElement('div');
@@ -71,6 +81,28 @@ function addProject() {
   container.appendChild(div);
 }
 
+function addRankedSkill() {
+  const container = document.getElementById('rankedSkillsContainer');
+  const div = document.createElement('div');
+  div.className = 'skill-entry mb-2';
+  div.style.display = 'flex';
+  div.style.alignItems = 'center';
+  div.style.gap = '10px';
+  div.innerHTML = `
+        <input type="text" class="skillName" placeholder="Skill" oninput="updatePreview()" style="flex:2">
+        <input type="range" class="skillLevel" min="20" max="100" value="80" oninput="updatePreview()" style="flex:1">
+    `;
+  container.appendChild(div);
+}
+
+function addAward() {
+  const container = document.getElementById('awardContainer');
+  const div = document.createElement('div');
+  div.className = 'award-entry mb-2';
+  div.innerHTML = `<input type="text" class="awardTitle" placeholder="Achievement Name" oninput="updatePreview()">`;
+  container.appendChild(div);
+}
+
 function addLanguage() {
   const container = document.getElementById('langContainer');
   const div = document.createElement('div');
@@ -88,6 +120,14 @@ function addLanguage() {
     `;
   container.appendChild(div);
 }
+
+// AI ATS Engine
+const ATS_DATABASE = {
+  "developer": ["GitHub", "API Integration", "Scalability", "Unit Testing", "React", "Node.js", "Docker", "Agile"],
+  "design": ["Figma", "User Research", "Wireframing", "Prototyping", "Design Systems", "Accessibility", "Adobe XD"],
+  "manager": ["Stakeholder Management", "Agile Methodology", "Budgeting", "Product Roadmap", "Risk Mitigation", "Jira"],
+  "default": ["Problem Solving", "Collaboration", "Communication", "Time Management", "Critical Thinking"]
+};
 
 const AI_SUMMARIES = {
   "default": "A highly motivated and detail-oriented professional with a strong foundation in problem-solving and a passion for continuous learning. Seeking to leverage skills in a challenging environment to drive innovation and growth.",
@@ -112,6 +152,39 @@ function aiSuggestSummary() {
   btn.innerHTML = '<i class="fas fa-check"></i> Improved!';
   btn.style.borderColor = 'var(--primary-color)';
   setTimeout(() => { btn.innerHTML = originalText; btn.style.borderColor = ''; }, 2000);
+}
+
+function updateATS() {
+  const title = (document.getElementById('titleIn').value || "").toLowerCase();
+  let keywords = ATS_DATABASE.default;
+  if (title.includes("dev")) keywords = ATS_DATABASE.developer;
+  else if (title.includes("design")) keywords = ATS_DATABASE.design;
+  else if (title.includes("manag")) keywords = ATS_DATABASE.manager;
+
+  const container = document.getElementById('atsKeywords');
+  if (container) {
+    container.innerHTML = keywords.map(k => `<span class="keyword-tag" onclick="addSkillFromATS('${k}')">${k}</span>`).join('');
+  }
+}
+
+function addSkillFromATS(skill) {
+  addRankedSkill();
+  const entries = document.querySelectorAll('.skill-entry');
+  const lastEntry = entries[entries.length - 1];
+  lastEntry.querySelector('.skillName').value = skill;
+  updatePreview();
+}
+
+// QR Generation
+function updateQR() {
+  const url = document.getElementById('qrIn').value;
+  const qrImg = document.getElementById('qrImage');
+  if (url && qrImg) {
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(url)}`;
+    qrImg.style.display = 'block';
+  } else if (qrImg) {
+    qrImg.style.display = 'none';
+  }
 }
 
 // Live Preview Logic
@@ -194,6 +267,14 @@ function updatePreview() {
   });
   document.getElementById('eduOut').innerHTML = eduHtml;
 
+  // Achievements
+  const awardEntries = document.querySelectorAll('.awardTitle');
+  let awardHtml = '<ul>';
+  awardEntries.forEach(input => {
+    if (input.value) awardHtml += `<li>${input.value}</li>`;
+  });
+  document.getElementById('awardOut').innerHTML = awardHtml + '</ul>';
+
   // Languages
   const langEntries = document.querySelectorAll('.lang-entry');
   let langHtml = '';
@@ -206,29 +287,46 @@ function updatePreview() {
   });
   document.getElementById('langOut').innerHTML = langHtml;
 
-  // Skills
-  const skillsIn = document.getElementById('skillsIn').value;
-  if (skillsIn) {
-    const skills = skillsIn.split(',').map(s => s.trim()).filter(s => s !== '');
-    document.getElementById('skillsOut').innerHTML = skills.map(skill =>
-      `<span style="display:inline-block; background:rgba(255,255,255,0.1); padding: 2px 8px; border-radius:4px; margin: 2px; font-size: 0.8rem;">${skill}</span>`
-    ).join(' ');
-  } else {
-    document.getElementById('skillsOut').innerHTML = '';
-  }
+  // Ranked Skills
+  const skillEntries = document.querySelectorAll('.skill-entry');
+  let skillsHtml = '';
+  skillEntries.forEach(entry => {
+    const name = entry.querySelector('.skillName').value;
+    const level = entry.querySelector('.skillLevel').value;
+    if (name) {
+      skillsHtml += `
+                <div style="margin-bottom: 10px;">
+                    <div style="display:flex; justify-content:between; font-size:0.8rem;">
+                        <span>${name}</span>
+                    </div>
+                    <div class="skill-bar-container">
+                        <div class="skill-bar-fill" style="width: ${level}%"></div>
+                    </div>
+                </div>
+            `;
+    }
+  });
+  document.getElementById('skillsOut').innerHTML = skillsHtml;
 
+  updateQR();
+  updateATS();
   calculateStrength();
   saveToLocalStorage();
 }
 
 function calculateStrength() {
   let strength = 0;
-  const fields = ['nameIn', 'titleIn', 'emailIn', 'conIn', 'addIn', 'objectiveIn', 'skillsIn'];
+  const fields = ['nameIn', 'titleIn', 'emailIn', 'conIn', 'addIn', 'objectiveIn'];
   fields.forEach(f => {
-    if (document.getElementById(f) && document.getElementById(f).value.length > 5) strength += 10;
+    const el = document.getElementById(f);
+    if (el && el.value.length > 5) strength += 10;
   });
-  if (document.querySelectorAll('.experience-entry').length > 1) strength += 15;
-  if (document.querySelectorAll('.project-entry').length > 1) strength += 15;
+
+  if (document.querySelectorAll('.experience-entry').length > 1) strength += 10;
+  if (document.querySelectorAll('.project-entry').length > 1) strength += 10;
+  if (document.querySelectorAll('.skill-entry').length > 2) strength += 10;
+  if (document.getElementById('qrIn') && document.getElementById('qrIn').value) strength += 10;
+
   strength = Math.min(strength, 100);
   const bar = document.getElementById('strengthBar');
   const text = document.getElementById('strengthText');
@@ -253,7 +351,7 @@ function saveToLocalStorage() {
       lin: document.getElementById('linIn').value,
       site: document.getElementById('siteIn').value,
       objective: document.getElementById('objectiveIn').value,
-      skills: document.getElementById('skillsIn').value,
+      qr: document.getElementById('qrIn') ? document.getElementById('qrIn').value : ''
     },
     theme: {
       color: document.getElementById('themeColor').value
@@ -274,11 +372,14 @@ function loadFromLocalStorage() {
     if (document.getElementById('linIn')) document.getElementById('linIn').value = data.personal.lin || '';
     if (document.getElementById('siteIn')) document.getElementById('siteIn').value = data.personal.site || '';
     if (document.getElementById('objectiveIn')) document.getElementById('objectiveIn').value = data.personal.objective || '';
-    if (document.getElementById('skillsIn')) document.getElementById('skillsIn').value = data.personal.skills || '';
+    if (document.getElementById('qrIn')) document.getElementById('qrIn').value = data.personal.qr || '';
 
     if (data.theme && data.theme.color) {
-      document.getElementById('themeColor').value = data.theme.color;
-      changeThemeColor(data.theme.color);
+      const themeColorInput = document.getElementById('themeColor');
+      if (themeColorInput) {
+        themeColorInput.value = data.theme.color;
+        changeThemeColor(data.theme.color);
+      }
     }
     updatePreview();
   }
@@ -287,19 +388,24 @@ function loadFromLocalStorage() {
 window.addEventListener('load', loadFromLocalStorage);
 
 // Image Handling
-document.getElementById('file').addEventListener('change', function () {
-  const reader = new FileReader();
-  const profileOut = document.getElementById('profileOut');
-  const userPlaceholder = document.getElementById('userPlaceholder');
-  reader.onload = function () {
-    profileOut.src = reader.result;
-    profileOut.style.display = 'block';
-    if (userPlaceholder) userPlaceholder.style.display = 'none';
-  }
-  if (this.files[0]) {
-    reader.readAsDataURL(this.files[0]);
-  }
-});
+const fileInput = document.getElementById('file');
+if (fileInput) {
+  fileInput.addEventListener('change', function () {
+    const reader = new FileReader();
+    const profileOut = document.getElementById('profileOut');
+    const userPlaceholder = document.getElementById('userPlaceholder');
+    reader.onload = function () {
+      if (profileOut) {
+        profileOut.src = reader.result;
+        profileOut.style.display = 'block';
+      }
+      if (userPlaceholder) userPlaceholder.style.display = 'none';
+    }
+    if (this.files[0]) {
+      reader.readAsDataURL(this.files[0]);
+    }
+  });
+}
 
 function downloadPDF() {
   const element = document.getElementById('resumePaper');

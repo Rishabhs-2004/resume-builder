@@ -175,11 +175,50 @@
       </div>
 
       <div class="section-card">
-        <h3 class="section-title"><i class="fas fa-tools"></i> Skills</h3>
-        <div class="form-group">
-          <input type="text" id="skillsIn" placeholder="React, Node.js, Python, Figma (comma separated)"
-            oninput="updatePreview()">
+        <h3 class="section-title"><i class="fas fa-magic"></i> AI ATS Assistant</h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Recommended keywords for your
+          role:</p>
+        <div id="atsKeywords" class="ats-box">
+          Enter a job title to see suggestions...
         </div>
+      </div>
+
+      <div class="section-card">
+        <h3 class="section-title"><i class="fas fa-font"></i> Typography & Branding</h3>
+        <div class="grid-2">
+          <select class="form-control" onchange="changeFont(this.value)">
+            <option value="font-modern">Modern (Inter)</option>
+            <option value="font-classic">Classic (Serif)</option>
+            <option value="font-elegant">Elegant (Outfit)</option>
+          </select>
+          <input type="text" id="qrIn" placeholder="URL for QR Code (e.g. Portfolio)" oninput="updatePreview()">
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3 class="section-title"><i class="fas fa-tools"></i> Skills Proficiency</h3>
+        <div id="rankedSkillsContainer">
+          <div class="skill-entry mb-2" style="display: flex; align-items: center; gap: 10px;">
+            <input type="text" class="skillName" placeholder="Skill" oninput="updatePreview()" style="flex:2">
+            <input type="range" class="skillLevel" min="20" max="100" value="80" oninput="updatePreview()"
+              style="flex:1">
+          </div>
+        </div>
+        <button class="btn btn-outline add-btn" onclick="addRankedSkill()">
+          <i class="fas fa-plus"></i> Add Skilled Item
+        </button>
+      </div>
+
+      <div class="section-card">
+        <h3 class="section-title"><i class="fas fa-certificate"></i> Achievements & Awards</h3>
+        <div id="awardContainer">
+          <div class="award-entry mb-2">
+            <input type="text" class="awardTitle" placeholder="Achievement Name" oninput="updatePreview()">
+          </div>
+        </div>
+        <button class="btn btn-outline add-btn" onclick="addAward()">
+          <i class="fas fa-plus"></i> Add Achievement
+        </button>
       </div>
     </div>
 
@@ -223,12 +262,21 @@
                 <div class="sidebar-content" id="skillsOut">
                 </div>
               </div>
+
+              <div id="qrCodeContainer">
+                <img src="" id="qrImage" style="width: 100%; display: none;">
+              </div>
             </div>
 
             <div class="main-content">
               <div class="resume-header">
                 <h1 id="nameOut">Your Name</h1>
                 <p id="titleOut">Professional Title</p>
+              </div>
+
+              <div class="resume-section">
+                <h4 class="resume-section-title"><i class="fas fa-certificate"></i> Achievements</h4>
+                <div id="awardOut" class="item-desc"></div>
               </div>
 
               <div class="resume-section">
