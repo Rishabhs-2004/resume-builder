@@ -40,9 +40,8 @@ The ultimate professional tool for creating high-impact, industry-standard resum
 5. **Add Digital Links**: Paste your LinkedIn URL in the QR Code field to add a professional scan-able link.
 6. **Deploy & Download**: Your progress saves automatically. Once done, hit **Download PDF**.
 
-## 🌐 Live Demo & Deployment
 
-Aap is project ko **GitHub Pages** ya **Render** par asani se deploy kar sakte hain. Bas repository connect karein aur aapka professional resume builder live ho jayega!
+---
 
 ---
 Developed with ❤️ by [Rishabh](https://github.com/Rishabhs-2004)
