@@ -1,154 +1,198 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bootstrap demo</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-  <style>
-    .my-img {
-      width: 160px;
-      border-radius: 50%;
-    }
-
-    #secPage {
-      display: none;
-    }
-
-    .clr {
-      background: #FED8B1;
-    }
-
-    #file {
-      position: relative;
-      bottom: 44px;
-      visibility: hidden;
-    }
-
-    #profile:hover~#file {
-      visibility: visible;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Resume Builder | Create Your Professional CV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@500;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
-<body>
-  <!-- mainPage  -->
-  <div class="container" id="mainPage">
-    <h3 class="mb-0  text-center my-3">Resume Generator</h3>
-    <p class="text-center ">"Fill your information and get your resume in no time"</p>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <h5>Personal Info</h5>
-          <label for="name" class="form-label mt-1 mb-0">Your Name</label>
-          <input type="text" class="form-control" id="nameIn" placeholder="Enter here">
-          <label for="phone" class="form-label mt-1 mb-0">Your Phone</label>
-          <input type="text" class="form-control" id="conIn" placeholder="Enter here">
-          <label for="address" class="form-label mt-1 mb-0">Your Address</label><br>
-          <textarea id="addIn" rows="2" placeholder="Enter here" class="w-100 form-control"></textarea>
-          <h6 class="mt-1">Imhportant Links</h6>
-          <label for="fblink" class="form-label mt-1 mb-0">Facebook</label>
-          <input type="text" class="form-control" id="fbIn" placeholder="Enter here">
-          <label for="instalink" class="form-label mt-1 mb-0">Instagram</label>
-          <input type="text" class="form-control" id="instaIn" placeholder="Enter here">
-          <label for="linkedinlink" class="form-label mt-1 mb-0">Linkedin</label>
-          <input type="text" class="form-control" id="linIn" placeholder="Enter here">
-
+<body data-theme="light">
+  <div class="app-container">
+    <!-- Form Section -->
+    <div class="form-section">
+      <div class="form-header">
+        <div>
+          <h1>Resume Builder</h1>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Fill in your details to see magic</p>
         </div>
-        <div class="col-md-6">
-          <h5>Professional Info</h5>
-          <label for="objective" class="form-label mt-1 mb-0">Objective</label><br>
-          <textarea id="objectiveIn" rows="2" placeholder="Enter here" class="w-100 form-control"></textarea>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
 
-          <div class="form-group" id="we">
-            <label for="workexperience" class="form-label mt-1 mb-0">Work Experience</label><br>
-            <textarea rows="2" placeholder="Enter here" class="w-100 form-control workIn"></textarea>
-            <div class="container text-center" id="weBtn">
-              <button type="button" class="btn btn-outline-dark w-10 py-0 mt-2 px-2" onclick="addnewWE()">Add</button>
+      <div class="section-card">
+        <h3 class="section-title"><i class="fas fa-user-circle"></i> Personal Information</h3>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="nameIn" placeholder="John Doe" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Professional Title</label>
+            <input type="text" id="titleIn" placeholder="Full Stack Developer" oninput="updatePreview()">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="emailIn" placeholder="john@example.com" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" id="conIn" placeholder="+1 234 567 890" oninput="updatePreview()">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Address</label>
+          <input type="text" id="addIn" placeholder="New York, USA" oninput="updatePreview()">
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>LinkedIn</label>
+            <input type="text" id="linIn" placeholder="linkedin.com/in/username" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Portfolio / Website</label>
+            <input type="text" id="siteIn" placeholder="github.com/username" oninput="updatePreview()">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Profile Picture</label>
+          <input type="file" id="file" accept="image/*" class="form-control">
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3 class="section-title"><i class="fas fa-bullseye"></i> Professional Summary</h3>
+        <div class="form-group">
+          <textarea id="objectiveIn" rows="4" placeholder="Briefly describe your professional background and goals..."
+            oninput="updatePreview()"></textarea>
+        </div>
+      </div>
+
+      <div class="section-card" id="weSection">
+        <h3 class="section-title"><i class="fas fa-briefcase"></i> Work Experience</h3>
+        <div class="we-items" id="weContainer">
+          <div class="experience-entry mb-3">
+            <div class="grid-2">
+              <input type="text" class="weTitle mb-2" placeholder="Job Title" oninput="updatePreview()">
+              <input type="text" class="weCompany mb-2" placeholder="Company" oninput="updatePreview()">
+            </div>
+            <input type="text" class="weDate mb-2" placeholder="Duration (e.g. 2020 - Present)"
+              oninput="updatePreview()">
+            <textarea class="weDesc" rows="2" placeholder="Responsibilities and achievements..."
+              oninput="updatePreview()"></textarea>
+          </div>
+        </div>
+        <button class="btn btn-outline add-btn" onclick="addExperience()">
+          <i class="fas fa-plus"></i> Add Experience
+        </button>
+      </div>
+
+      <div class="section-card">
+        <h3 class="section-title"><i class="fas fa-graduation-cap"></i> Education</h3>
+        <div id="eduContainer">
+          <div class="education-entry mb-3">
+            <div class="grid-2">
+              <input type="text" class="eduDegree mb-2" placeholder="Degree / Course" oninput="updatePreview()">
+              <input type="text" class="eduSchool mb-2" placeholder="University / School" oninput="updatePreview()">
+            </div>
+            <input type="text" class="eduDate mb-2" placeholder="Year (e.g. 2016 - 2020)" oninput="updatePreview()">
+          </div>
+        </div>
+        <button class="btn btn-outline add-btn" onclick="addEducation()">
+          <i class="fas fa-plus"></i> Add Education
+        </button>
+      </div>
+
+      <div class="section-card">
+        <h3 class="section-title"><i class="fas fa-tools"></i> Skills</h3>
+        <div class="form-group">
+          <input type="text" id="skillsIn" placeholder="React, Node.js, Python, Figma (comma separated)"
+            oninput="updatePreview()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview Section -->
+    <div class="preview-section">
+      <div id="captureArea">
+        <div class="resume-paper" id="resumePaper">
+          <div class="resume-container">
+            <div class="sidebar">
+              <div class="profile-img-container" id="profileImgContainer">
+                <img src="img.jpg.jpeg" alt="Profile" id="profileOut">
+              </div>
+
+              <div class="sidebar-section">
+                <h4 class="sidebar-title">Contact</h4>
+                <div class="sidebar-content">
+                  <p id="phoneOut"></p>
+                  <p id="emailOut"></p>
+                  <p id="addressOut"></p>
+                </div>
+              </div>
+
+              <div class="sidebar-section">
+                <h4 class="sidebar-title">Links</h4>
+                <div class="sidebar-content">
+                  <p id="linOut"></p>
+                  <p id="siteOut"></p>
+                </div>
+              </div>
+
+              <div class="sidebar-section">
+                <h4 class="sidebar-title">Skills</h4>
+                <div class="sidebar-content" id="skillsOut">
+                </div>
+              </div>
+            </div>
+
+            <div class="main-content">
+              <div class="resume-header">
+                <h1 id="nameOut">Your Name</h1>
+                <p id="titleOut">Professional Title</p>
+              </div>
+
+              <div class="resume-section">
+                <h4 class="resume-section-title"><i class="fas fa-user"></i> Profile</h4>
+                <p id="objectiveOut" class="item-desc"></p>
+              </div>
+
+              <div class="resume-section">
+                <h4 class="resume-section-title"><i class="fas fa-briefcase"></i> Experience</h4>
+                <div id="weOut"></div>
+              </div>
+
+              <div class="resume-section">
+                <h4 class="resume-section-title"><i class="fas fa-graduation-cap"></i> Education</h4>
+                <div id="eduOut"></div>
+              </div>
             </div>
           </div>
-          <!-- add    -->
-          <div class="form-group" id="aq">
-            <label for="Acadmicqualification" class="form-label mt-1 mb-0">Acadmic Qualification</label><br>
-            <textarea rows="2" placeholder="Enter here" class="w-100 form-control acadmicIn"></textarea>
-            <div class="container text-center" id="aqBtn">
-              <button type="button" class="btn btn-outline-dark w-10 py-0 mt-2 px-2" onclick="addnewAQ()">Add</button>
-            </div>
-          </div>
-          <!-- add  -->
-
         </div>
       </div>
-    </div>
-    <div class="container text-center">
-      <button type="button" class="btn btn-outline-dark my-5" onclick="createCV()">Generate CV</button>
+
+      <div class="preview-controls">
+        <button class="btn btn-outline" onclick="resetForm()">
+          <i class="fas fa-undo"></i> Reset
+        </button>
+        <button class="btn btn-primary" onclick="downloadPDF()">
+          <i class="fas fa-file-pdf"></i> Download PDF
+        </button>
+      </div>
     </div>
   </div>
-
-  <!-- secPage -->
-  <div class="container my-5 pb-5" id="secPage">
-    <div class="row">
-      <div class="col-md-4 text-center clr pb-3">
-        <!-- <div class="imgDiv"> -->
-        <img src="img.jpg.jpeg" alt="passportsizephoto" id="profile" class="img-fluid py-3 my-img"> <br>
-        <input type="file" id="file" style="width:97px;">
-        <!-- <label for="file" id="uploadBtn">Choose Photo</label> -->
-        <!-- </div> -->
-
-        <p id="nameOut"></p>
-        <p id="conOut"></p>
-        <p id="addOut"></p>
-        <a href="#" id="fbOut"></a>
-        <a href="#" id="instaOut"></a>
-        <a href="#" id="linOut"></a>
-
-        <!-- <p id="nameOut">Mohd Shavez</p>
-          <p id="conOut">+91-9989887787, +91-8878779989</p>
-          <p id="addOut">425/302 wazir bagh, Lucknow 226003</p>
-          <a href="#" id="fbOut">Facebook</a>
-          <a href="#" id="instaOut">Instagram</a>
-          <a href="#" id="linOut">Linkedin</a> -->
-      </div>
-      <div class="col-md-8 ">
-        <h4 class="pt-4" id="bignameOut"></h4>
-
-        <div class="container border p-0 mt-3">
-          <h5 class="p-3 clr">Objective</h5>
-          <p class="px-3" id="objectiveOut"> </p>
-        </div>
-        <div class="container border p-0 mt-3">
-          <h5 class="p-3 clr">Work Experience</h5>
-          <div>
-            <ul id="weULLI">
-            </ul>
-          </div>
-        </div>
-        <div class="container border p-0 mt-3">
-          <h5 class="p-3 clr">Acadmic Qualification</h5>
-          <div>
-            <ul id="aqULLI">
-            </ul>
-          </div>
-        </div>
-        <div class="container text-center">
-          <button type="button" class="btn btn-outline-secondary w-10 mt-5 py-0 px-3" onclick="printcv()">Print</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-
-
-
-
 
   <script src="script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
-    crossorigin="anonymous"></script>
 </body>
 
 </html>
