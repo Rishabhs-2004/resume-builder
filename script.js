@@ -407,7 +407,6 @@ function downloadPDF() {
   const body = document.body;
   const loading = document.createElement('div');
 
-  // Create loading overlay
   loading.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
   Object.assign(loading.style, {
     position: 'fixed',
@@ -427,66 +426,71 @@ function downloadPDF() {
   });
   body.appendChild(loading);
 
-  // Clone the resume to a temporary container to enforce A4 size and Desktop layout
   const container = document.createElement('div');
   const clone = element.cloneNode(true);
 
-  // Setup container - hidden from view but rendered
-  // We use a fixed width of 800px (slightly more than A4) to ensure no wrapping issues
+  // Use slightly safe width (793px) to fit within A4 (approx 794px) to prevent horizontal cut/overflow
+  // Use min-height 1120px to prevent slight pixel overflow creating a 2nd blank page
   Object.assign(container.style, {
     position: 'fixed',
     top: '0',
-    left: '0', // Position top-left
-    width: '794px', // Exact A4 width
-    minHeight: '1123px', // Exact A4 Height
-    zIndex: '-9999', // Behind everything
+    left: '0',
+    width: '793px',
+    minHeight: '1120px',
+    zIndex: '-9999',
     background: '#fff',
-    overflow: 'visible' // Allow content to flow
+    overflow: 'hidden' // Prevent any spillage
   });
 
-  // Reset styles on the clone to ensure clean capture
   Object.assign(clone.style, {
-    transform: 'scale(1)', // Ensure no zoom
-    transformOrigin: 'top left',
+    transform: 'none',
     margin: '0',
     width: '100%',
     height: 'auto',
-    boxShadow: 'none'
+    minHeight: '1120px',
+    boxShadow: 'none',
+    border: 'none',
+    borderRadius: '0'
   });
+
+  // Ensure sidebar stretches to full height
+  const sidebar = clone.querySelector('.sidebar');
+  if (sidebar) {
+    sidebar.style.minHeight = '1120px';
+    sidebar.style.height = '100%';
+  }
 
   container.appendChild(clone);
   body.appendChild(container);
 
-  // Use a longer delay to ensure DOM updates and image loading in the clone
   setTimeout(() => {
     const opt = {
       margin: 0,
       filename: `Resume_${document.getElementById('nameIn').value || 'My'}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: {
-        scale: 2, // High res
-        useCORS: true, // Load images
+        scale: 2,
+        useCORS: true,
         scrollY: 0,
-        scrollX: 0,
-        windowWidth: 1200, // FORCE DESKTOP VIEW to fix sidebar disappearing
-        width: 794 // Capture exact width
+        // windowWidth: 1200 forces the media queries to behave like desktop (showing sidebar)
+        windowWidth: 1200,
+        width: 793
       },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
     html2pdf().set(opt).from(clone).save()
       .then(() => {
-        body.removeChild(container);
-        body.removeChild(loading);
+        if (body.contains(container)) body.removeChild(container);
+        if (body.contains(loading)) body.removeChild(loading);
       })
       .catch(err => {
         console.error("PDF Generate Error:", err);
-        alert("Verification Failed: Could not generate PDF. Please try again.");
+        alert("Error generating PDF. Please try again.");
         if (body.contains(container)) body.removeChild(container);
         if (body.contains(loading)) body.removeChild(loading);
       });
-  }, 1000); // 1 second delay to allow rendering
+  }, 1000);
 }
 
 function resetForm() {
