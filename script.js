@@ -115,8 +115,13 @@ function updatePreview() {
 // Image Handling
 document.getElementById('file').addEventListener('change', function () {
   const reader = new FileReader();
+  const profileOut = document.getElementById('profileOut');
+  const userPlaceholder = document.getElementById('userPlaceholder');
+
   reader.onload = function () {
-    document.getElementById('profileOut').src = reader.result;
+    profileOut.src = reader.result;
+    profileOut.style.display = 'block';
+    if (userPlaceholder) userPlaceholder.style.display = 'none';
   }
   if (this.files[0]) {
     reader.readAsDataURL(this.files[0]);
