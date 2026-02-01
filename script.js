@@ -39,6 +39,44 @@ function addEducation() {
   container.appendChild(div);
 }
 
+function addProject() {
+  const container = document.getElementById('projectContainer');
+  const div = document.createElement('div');
+  div.className = 'project-entry mb-3 mt-3 pt-3 border-top';
+  div.innerHTML = `
+        <input type="text" class="projectTitle mb-2" placeholder="Project Name" oninput="updatePreview()">
+        <input type="text" class="projectLink mb-2" placeholder="Project Link (Optional)" oninput="updatePreview()">
+        <textarea class="projectDesc" rows="2" placeholder="What did you build?" oninput="updatePreview()"></textarea>
+    `;
+  container.appendChild(div);
+}
+
+const AI_SUMMARIES = {
+  "default": "A highly motivated and detail-oriented professional with a strong foundation in problem-solving and a passion for continuous learning. Seeking to leverage skills in a challenging environment to drive innovation and growth.",
+  "developer": "Passionate Software Developer with expertise in modern web technologies. Experienced in building scalable applications, optimizing performance, and collaborating in agile teams to deliver high-quality software solutions.",
+  "designer": "Creative UI/UX Designer dedicated to crafting intuitive and visually stunning user experiences. Skilled in user research, wireframing, and creating pixel-perfect designs that align with business goals.",
+  "manager": "Results-driven Project Manager with a proven trackable record of leading cross-functional teams and delivering complex projects on time and within budget. Strong focus on process improvement and stakeholder management."
+};
+
+function aiSuggestSummary() {
+  const title = (document.getElementById('titleIn').value || "").toLowerCase();
+  let suggestion = AI_SUMMARIES.default;
+
+  if (title.includes("dev") || title.includes("soft")) suggestion = AI_SUMMARIES.developer;
+  else if (title.includes("design") || title.includes("art")) suggestion = AI_SUMMARIES.designer;
+  else if (title.includes("manag") || title.includes("lead")) suggestion = AI_SUMMARIES.manager;
+
+  document.getElementById('objectiveIn').value = suggestion;
+  updatePreview();
+
+  // Visual feedback
+  const btn = document.querySelector('[onclick="aiSuggestSummary()"]');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-check"></i> Improved!';
+  btn.style.borderColor = 'var(--primary-color)';
+  setTimeout(() => { btn.innerHTML = originalText; btn.style.borderColor = ''; }, 2000);
+}
+
 // Live Preview Logic
 function updatePreview() {
   // Personal Info
@@ -54,6 +92,28 @@ function updatePreview() {
 
   // Objective
   document.getElementById('objectiveOut').innerText = document.getElementById('objectiveIn').value;
+
+  // Projects
+  const projectEntries = document.querySelectorAll('.project-entry');
+  let projectHtml = '';
+  projectEntries.forEach(entry => {
+    const title = entry.querySelector('.projectTitle').value;
+    const link = entry.querySelector('.projectLink').value;
+    const desc = entry.querySelector('.projectDesc').value;
+
+    if (title) {
+      projectHtml += `
+                <div class="experience-item">
+                    <div class="item-header">
+                        <span class="item-title">${title}</span>
+                        ${link ? `<a href="${link}" target="_blank" style="font-size:0.8rem; color:var(--primary-color);">View <i class="fas fa-external-link-alt"></i></a>` : ''}
+                    </div>
+                    <p class="item-desc">${desc}</p>
+                </div>
+            `;
+    }
+  });
+  document.getElementById('projectOut').innerHTML = projectHtml;
 
   // Work Experience
   const weEntries = document.querySelectorAll('.experience-entry');
@@ -110,6 +170,35 @@ function updatePreview() {
   } else {
     document.getElementById('skillsOut').innerHTML = '';
   }
+
+  // Calculate Strength
+  calculateStrength();
+}
+
+function calculateStrength() {
+  let strength = 0;
+  const fields = [
+    'nameIn', 'titleIn', 'emailIn', 'conIn', 'addIn',
+    'objectiveIn', 'skillsIn'
+  ];
+
+  fields.forEach(f => {
+    if (document.getElementById(f).value.length > 5) strength += 10;
+  });
+
+  if (document.querySelectorAll('.experience-entry').length > 1) strength += 15;
+  if (document.querySelectorAll('.project-entry').length > 1) strength += 15;
+
+  strength = Math.min(strength, 100);
+
+  const bar = document.getElementById('strengthBar');
+  const text = document.getElementById('strengthText');
+  bar.style.width = strength + '%';
+  text.innerText = strength + '% Strength';
+
+  if (strength < 40) bar.style.background = '#ef4444';
+  else if (strength < 70) bar.style.background = '#f59e0b';
+  else bar.style.background = '#22c55e';
 }
 
 // Image Handling

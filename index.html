@@ -19,9 +19,17 @@
     <!-- Form Section -->
     <div class="form-section">
       <div class="form-header">
-        <div>
+        <div style="flex: 1;">
           <h1>Resume Builder</h1>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">Fill in your details to see magic</p>
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+            <div style="flex: 1; height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden;">
+              <div id="strengthBar"
+                style="width: 0%; height: 100%; background: var(--primary-color); transition: width 0.3s ease;"></div>
+            </div>
+            <span id="strengthText"
+              style="font-size: 0.7rem; font-weight: 700; color: var(--primary-color); white-space: nowrap;">0%
+              Strength</span>
+          </div>
         </div>
         <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
           <i class="fas fa-moon"></i>
@@ -71,11 +79,32 @@
       </div>
 
       <div class="section-card">
-        <h3 class="section-title"><i class="fas fa-bullseye"></i> Professional Summary</h3>
+        <h3 class="section-title">
+          <i class="fas fa-magic"></i> Professional Summary
+          <button class="btn btn-outline" style="padding: 2px 8px; font-size: 0.7rem; margin-left: auto;"
+            onclick="aiSuggestSummary()">
+            <i class="fas fa-sparkles"></i> AI Suggest
+          </button>
+        </h3>
         <div class="form-group">
           <textarea id="objectiveIn" rows="4" placeholder="Briefly describe your professional background and goals..."
             oninput="updatePreview()"></textarea>
         </div>
+      </div>
+
+      <div class="section-card" id="projectSection">
+        <h3 class="section-title"><i class="fas fa-code"></i> Projects</h3>
+        <div id="projectContainer">
+          <div class="project-entry mb-3">
+            <input type="text" class="projectTitle mb-2" placeholder="Project Name" oninput="updatePreview()">
+            <input type="text" class="projectLink mb-2" placeholder="Project Link (Optional)" oninput="updatePreview()">
+            <textarea class="projectDesc" rows="2" placeholder="What did you build?"
+              oninput="updatePreview()"></textarea>
+          </div>
+        </div>
+        <button class="btn btn-outline add-btn" onclick="addProject()">
+          <i class="fas fa-plus"></i> Add Project
+        </button>
       </div>
 
       <div class="section-card" id="weSection">
@@ -167,6 +196,11 @@
               <div class="resume-section">
                 <h4 class="resume-section-title"><i class="fas fa-user"></i> Profile</h4>
                 <p id="objectiveOut" class="item-desc"></p>
+              </div>
+
+              <div class="resume-section">
+                <h4 class="resume-section-title"><i class="fas fa-code"></i> Projects</h4>
+                <div id="projectOut"></div>
               </div>
 
               <div class="resume-section">
