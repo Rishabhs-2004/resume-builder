@@ -1,49 +1,45 @@
-# 🚀 Premium Resume Builder
+# 🚀 Ultra Modern & AI-Powered Resume Builder
 
-A modern, real-time, and professional Resume Builder designed to help you create stunning CVs in minutes. Built with a focus on **Aesthetics**, **Efficiency**, and **Responsiveness**.
+The ultimate professional tool for creating high-impact, industry-standard resumes. Built for the modern job seeker, integrated with **AI assistance**, **ATS optimization**, and **Real-time customization**.
 
-![Landing Page](https://via.placeholder.com/800x400?text=Modern+Resume+Builder+Preview)
+![Landing Page](https://via.placeholder.com/1200x600?text=AI-Powered+Resume+Builder+Preview)
 
-## ✨ Features
+## 🌟 Next-Generation Features
 
-- **Real-time Live Preview**: See your changes instantly as you type. Side-by-side layout for maximum productivity.
-- **Premium Design Layout**: Clean, minimalist, and professional resume template with a sidebar for contact information and skills.
-- **Dark Mode Support**: Aesthetic dark mode for a better user experience during late-night sessions.
-- **Fully Responsive**: Optimized for both Desktop and Mobile devices.
-- **High-Quality PDF Export**: Download your resume as a professional PDF using `html2pdf.js`.
-- **Customizable Sections**: 
-  - Education history
-  - Work experience
-  - Real-time skills tagging
-  - Professional summary/profile
-- **Print Ready**: Specifically styled for A4 paper printing.
+- **🤖 AI ATS Assistant**: Get real-time keyword suggestions based on your target job role. Optimize your resume for industry-standard *Applicant Tracking Systems*.
+- **🪄 AI Magic Write**: One-click professional summary generation tailored to your job title.
+- **📱 Dynamic QR Code Integration**: Automatically generate a scan-able QR code for your LinkedIn, GitHub, or Portfolio website.
+- **📊 Skill Proficiency Bars**: Don't just list skills—visualize your expertise with dynamic progress bars and sliders.
+- **🎨 Custom Branding & Layouts**:
+  - **Color Picker**: Choose your signature theme color for a unique personal brand.
+  - **Multiple Layouts**: Toggle between *Classic Sidebar* and *Modern Top-Header* templates.
+  - **Typography Styles**: Switch between Modern (San-serif), Classic (Serif), and Elegant (Outfit) font moods.
+- **⚡ Real-time Live Preview**: Every stroke is reflected instantly on the professional preview pane.
+- **💾 Auto-Save Functionality**: Never lose your progress. All data is securely stored in your browser's local storage.
+- **📃 Professional PDF Export**: High-quality, print-ready PDF generation using `html2pdf.js`.
+- **🏆 Global Sections**: Includes Projects, Education, Work Experience, Languages, and Achievements.
 
 ## 🛠️ Tech Stack
 
 - **Frontend**: HTML5, Vanilla CSS3 (Custom Design System), JavaScript (ES6+)
-- **Icons**: Font Awesome 6
-- **Fonts**: Google Fonts (Outfit & Inter)
-- **PDF Generation**: [html2pdf.js](https://ekoopmans.github.io/html2pdf.js/)
+- **Icons**: Font Awesome 6 (Pro-style)
+- **Fonts**: Google Fonts (Inter, Outfit, Playfair Display)
+- **Engines**: 
+  - [html2pdf.js](https://ekoopmans.github.io/html2pdf.js/) for PDF Generation
+  - [QRServer API](http://goqr.me/api/) for real-time QR generation
 
 ## 🚀 How to Use
 
-1. **Fill Your Details**: Use the form on the left to enter your personal info, experience, and education.
-2. **Add Sections**: Click on "Add Experience" or "Add Education" to add multiple entries.
-3. **Live Preview**: Check the right side (or below on mobile) to see your real-time resume.
-4. **Download**: Once satisfied, click the **Download PDF** button to save your professional CV.
+1. **Brand Your CV**: Start by choosing your theme color and font mood in the *Typography & Branding* section.
+2. **Fill Your Profile**: Enter your info, and use the **AI Suggest** button to write a catchy summary.
+3. **Optimize with ATS**: Look at the *AI ATS Assistant* box to see which keywords recruiters are looking for. Click a tag to add it instantly.
+4. **Interactive Skills**: Use the sliders to rank your proficiency in each skill.
+5. **Add Digital Links**: Paste your LinkedIn URL in the QR Code field to add a professional scan-able link.
+6. **Deploy & Download**: Your progress saves automatically. Once done, hit **Download PDF**.
 
-## 📂 Project Structure
+## 🌐 Live Demo & Deployment
 
-```text
-├── index.html      # Main structure & content
-├── style.css       # Custom design system & responsiveness
-├── script.js       # Real-time preview & PDF logic
-└── README.md       # Project documentation
-```
-
-## 🌐 Deployment
-
-This project is ready to be deployed on platforms like **GitHub Pages**, **Vercel**, or **Render**. Simply upload the files and your live resume builder is ready!
+Aap is project ko **GitHub Pages** ya **Render** par asani se deploy kar sakte hain. Bas repository connect karein aur aapka professional resume builder live ho jayega!
 
 ---
 Developed with ❤️ by [Rishabh](https://github.com/Rishabhs-2004)
