@@ -417,7 +417,7 @@ function downloadPDF() {
     color: '#fff',
     padding: '20px',
     borderRadius: '10px',
-    zIndex: '10000',
+    zIndex: '100000',
     display: 'flex',
     gap: '10px',
     alignItems: 'center',
@@ -426,42 +426,9 @@ function downloadPDF() {
   });
   body.appendChild(loading);
 
-  const container = document.createElement('div');
-  const clone = element.cloneNode(true);
-
-  // Use slightly safe width (793px) to fit within A4 (approx 794px) to prevent horizontal cut/overflow
-  // Use min-height 1120px to prevent slight pixel overflow creating a 2nd blank page
-  Object.assign(container.style, {
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    width: '793px',
-    minHeight: '1120px',
-    zIndex: '-9999',
-    background: '#fff',
-    overflow: 'hidden' // Prevent any spillage
-  });
-
-  Object.assign(clone.style, {
-    transform: 'none',
-    margin: '0',
-    width: '100%',
-    height: 'auto',
-    minHeight: '1120px',
-    boxShadow: 'none',
-    border: 'none',
-    borderRadius: '0'
-  });
-
-  // Ensure sidebar stretches to full height
-  const sidebar = clone.querySelector('.sidebar');
-  if (sidebar) {
-    sidebar.style.minHeight = '1120px';
-    sidebar.style.height = '100%';
-  }
-
-  container.appendChild(clone);
-  body.appendChild(container);
+  // Add exporting class to body for clean capture
+  body.classList.add('is-exporting');
+  window.scrollTo(0, 0);
 
   setTimeout(() => {
     const opt = {
@@ -471,26 +438,28 @@ function downloadPDF() {
       html2canvas: {
         scale: 2,
         useCORS: true,
+        letterRendering: true,
         scrollY: 0,
-        // windowWidth: 1200 forces the media queries to behave like desktop (showing sidebar)
-        windowWidth: 1200,
-        width: 793
+        scrollX: 0,
+        windowWidth: 1050, // Force desktop layout during capture
+        logging: false
       },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
-    html2pdf().set(opt).from(clone).save()
+    html2pdf().set(opt).from(element).save()
       .then(() => {
-        if (body.contains(container)) body.removeChild(container);
+        body.classList.remove('is-exporting');
         if (body.contains(loading)) body.removeChild(loading);
       })
       .catch(err => {
         console.error("PDF Generate Error:", err);
         alert("Error generating PDF. Please try again.");
-        if (body.contains(container)) body.removeChild(container);
+        body.classList.remove('is-exporting');
         if (body.contains(loading)) body.removeChild(loading);
       });
-  }, 1000);
+  }, 1000); // Wait for re-layout to complete
 }
 
 function resetForm() {
