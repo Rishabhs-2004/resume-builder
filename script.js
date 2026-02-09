@@ -426,42 +426,28 @@ function downloadPDF() {
   });
   body.appendChild(loading);
 
-  // Create a copy of the resume for export
-  const clone = element.cloneNode(true);
+  // Force the original element to be A4 and visible for capture
+  const originalStyle = element.getAttribute('style') || '';
 
-  // Create a container that is technically visible but out of user's view
-  const container = document.createElement('div');
-  Object.assign(container.style, {
-    position: 'absolute',
-    left: '0',
-    top: '-10000px',
-    width: '210mm',
-    background: 'white',
-    zIndex: '-1',
-    display: 'block'
-  });
-
-  // Apply explicit styles to clone for capture
-  Object.assign(clone.style, {
-    transform: 'none',
-    margin: '0',
-    width: '210mm',
-    height: 'auto',
-    position: 'relative',
-    display: 'block',
-    boxShadow: 'none',
-    borderRadius: '0'
-  });
+  // Apply "Capture Mode" styles
+  element.style.width = '210mm';
+  element.style.minHeight = '297mm';
+  element.style.height = 'auto';
+  element.style.position = 'fixed';
+  element.style.top = '0';
+  element.style.left = '0';
+  element.style.zIndex = '999999';
+  element.style.transform = 'none';
+  element.style.margin = '0';
+  element.style.background = 'white';
+  element.style.display = 'block';
 
   // Ensure sidebar stretches
-  const sidebar = clone.querySelector('.sidebar');
+  const sidebar = element.querySelector('.sidebar');
   if (sidebar) {
-    sidebar.style.minHeight = '296mm';
-    sidebar.style.height = '100vw'; // Fallback for height
+    sidebar.style.minHeight = '297mm';
+    sidebar.style.height = '100%';
   }
-
-  container.appendChild(clone);
-  body.appendChild(container);
 
   setTimeout(() => {
     const opt = {
@@ -469,9 +455,8 @@ function downloadPDF() {
       filename: `Resume_${document.getElementById('nameIn').value || 'My'}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: {
-        scale: 2, // Scale 2 is safer for mobile memory
+        scale: 2,
         useCORS: true,
-        allowTaint: true,
         letterRendering: true,
         scrollY: 0,
         scrollX: 0,
@@ -482,16 +467,17 @@ function downloadPDF() {
       pagebreak: { mode: 'avoid-all' }
     };
 
-    html2pdf().set(opt).from(clone).save()
+    html2pdf().set(opt).from(element).save()
       .then(() => {
+        // Restore original state
+        element.setAttribute('style', originalStyle);
         if (body.contains(loading)) body.removeChild(loading);
-        if (body.contains(container)) body.removeChild(container);
       })
       .catch(err => {
         console.error("PDF Error:", err);
-        alert("Download failed. Please try again.");
+        element.setAttribute('style', originalStyle);
         if (body.contains(loading)) body.removeChild(loading);
-        if (body.contains(container)) body.removeChild(container);
+        alert("Error: Mobile memory full or browser limit. Try clearing tabs.");
       });
   }, 1000);
 }
