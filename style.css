@@ -230,16 +230,19 @@ textarea:focus {
 .resume-paper {
     background: white;
     width: 210mm;
-    min-height: 296mm;
+    height: 296mm;
+    /* Strictly 296mm to avoid 297mm overflow */
     max-height: 296mm;
-    /* Strictly limit to one page */
     box-shadow: var(--shadow-lg);
     border-radius: 4px;
-    overflow: hidden;
+    overflow: hidden !important;
+    /* Force content to stay inside */
     position: relative;
     padding: 0;
     color: #1e293b;
     transform-origin: top center;
+    page-break-after: avoid;
+    /* Prevent new page after this */
 }
 
 @media (max-width: 1400px) {
@@ -454,29 +457,19 @@ textarea:focus {
         box-shadow: none;
         transform: scale(1) !important;
         width: 210mm !important;
-        height: 297mm !important;
-        min-height: 297mm !important;
+        height: 296mm !important;
+        max-height: 296mm !important;
         margin: 0 !important;
         position: relative !important;
         display: block !important;
         visibility: visible !important;
         overflow: hidden !important;
+        page-break-after: avoid !important;
     }
 
-    .resume-container {
-        display: flex !important;
-        width: 100% !important;
-        height: 100% !important;
-    }
-
-    .sidebar {
-        width: 32% !important;
-        height: 100% !important;
-    }
-
-    .main-content {
-        width: 68% !important;
-        height: 100% !important;
+    /* Target all elements to avoid breaking if possible */
+    * {
+        page-break-inside: auto;
     }
 }
 

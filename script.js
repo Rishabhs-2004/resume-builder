@@ -456,14 +456,14 @@ function downloadPDF() {
       logging: false
     },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: 'avoid-all' } // Avoid creating new pages
+    pagebreak: { mode: 'avoid-all', before: '#none', after: '#none', avoid: '*' }
   };
 
-  // Use the worker API for better control
+  // Ultra-strict single page enforcement: only take the first page if multiple exist
   html2pdf().set(opt).from(element).toPdf().get('pdf').then((pdf) => {
-    // Check if the pdf is empty before saving
-    if (pdf.internal.pages.length <= 1 && pdf.internal.pageSize.width === 0) {
-      console.error("PDF generation failed or is empty");
+    const totalPages = pdf.internal.getNumberOfPages();
+    for (let i = totalPages; i > 1; i--) {
+      pdf.deletePage(i);
     }
   }).save().then(() => {
     element.setAttribute('style', originalStyle);
