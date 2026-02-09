@@ -426,9 +426,42 @@ function downloadPDF() {
   });
   body.appendChild(loading);
 
-  // Add exporting class to body for clean capture
-  body.classList.add('is-exporting');
-  window.scrollTo(0, 0);
+  // Create a copy of the resume for export
+  const clone = element.cloneNode(true);
+
+  // Create a container that is technically visible but out of user's view
+  const container = document.createElement('div');
+  Object.assign(container.style, {
+    position: 'absolute',
+    left: '0',
+    top: '-10000px',
+    width: '210mm',
+    background: 'white',
+    zIndex: '-1',
+    display: 'block'
+  });
+
+  // Apply explicit styles to clone for capture
+  Object.assign(clone.style, {
+    transform: 'none',
+    margin: '0',
+    width: '210mm',
+    height: 'auto',
+    position: 'relative',
+    display: 'block',
+    boxShadow: 'none',
+    borderRadius: '0'
+  });
+
+  // Ensure sidebar stretches
+  const sidebar = clone.querySelector('.sidebar');
+  if (sidebar) {
+    sidebar.style.minHeight = '296mm';
+    sidebar.style.height = '100vw'; // Fallback for height
+  }
+
+  container.appendChild(clone);
+  body.appendChild(container);
 
   setTimeout(() => {
     const opt = {
@@ -436,30 +469,31 @@ function downloadPDF() {
       filename: `Resume_${document.getElementById('nameIn').value || 'My'}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: {
-        scale: 3, // Higher scale for better quality
+        scale: 2, // Scale 2 is safer for mobile memory
         useCORS: true,
+        allowTaint: true,
         letterRendering: true,
         scrollY: 0,
         scrollX: 0,
-        windowWidth: 800, // Match A4 width approx
+        windowWidth: 1024,
         logging: false
       },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
       pagebreak: { mode: 'avoid-all' }
     };
 
-    html2pdf().set(opt).from(element).save()
+    html2pdf().set(opt).from(clone).save()
       .then(() => {
-        body.classList.remove('is-exporting');
         if (body.contains(loading)) body.removeChild(loading);
+        if (body.contains(container)) body.removeChild(container);
       })
       .catch(err => {
-        console.error("PDF Generate Error:", err);
-        alert("Error generating PDF. Please try again.");
-        body.classList.remove('is-exporting');
+        console.error("PDF Error:", err);
+        alert("Download failed. Please try again.");
         if (body.contains(loading)) body.removeChild(loading);
+        if (body.contains(container)) body.removeChild(container);
       });
-  }, 1000); // Wait for re-layout to complete
+  }, 1000);
 }
 
 function resetForm() {
