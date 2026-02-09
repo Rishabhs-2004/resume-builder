@@ -436,16 +436,16 @@ function downloadPDF() {
       filename: `Resume_${document.getElementById('nameIn').value || 'My'}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: {
-        scale: 2,
+        scale: 3, // Higher scale for better quality
         useCORS: true,
         letterRendering: true,
         scrollY: 0,
         scrollX: 0,
-        windowWidth: 1050, // Force desktop layout during capture
+        windowWidth: 800, // Match A4 width approx
         logging: false
       },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
+      pagebreak: { mode: 'avoid-all' }
     };
 
     html2pdf().set(opt).from(element).save()

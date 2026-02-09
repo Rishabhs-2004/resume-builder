@@ -226,10 +226,8 @@ textarea:focus {
 
 .resume-paper {
     background: white;
-    width: 794px;
-    /* A4 width in pixels at 96 DPI */
-    min-height: 1123px;
-    /* A4 height */
+    width: 210mm;
+    min-height: 296mm;
     box-shadow: var(--shadow-lg);
     border-radius: 4px;
     overflow: hidden;
@@ -260,7 +258,7 @@ textarea:focus {
 /* Modern Resume Template Styles */
 .resume-container {
     height: auto;
-    min-height: 1123px;
+    min-height: 296mm;
     display: grid;
     grid-template-columns: 30% 70%;
 }
@@ -272,8 +270,7 @@ textarea:focus {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 1123px;
-    height: 100%;
+    min-height: 100%;
 }
 
 .profile-img-container {
@@ -441,7 +438,7 @@ textarea:focus {
     .resume-paper {
         box-shadow: none;
         transform: scale(1) !important;
-        width: 794px !important;
+        width: 210mm !important;
         margin: 0 !important;
     }
 }
