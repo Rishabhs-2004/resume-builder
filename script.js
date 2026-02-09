@@ -426,60 +426,53 @@ function downloadPDF() {
   });
   body.appendChild(loading);
 
-  // Force the original element to be A4 and visible for capture
+  // Save original scroll
+  const scrollY = window.scrollY;
+  window.scrollTo(0, 0);
+
+  // Prepare element for capture
   const originalStyle = element.getAttribute('style') || '';
+  Object.assign(element.style, {
+    width: '210mm',
+    minHeight: '297mm',
+    position: 'static', // Change from fixed to static for cleaner capture
+    display: 'block',
+    transform: 'none',
+    margin: '0 auto',
+    zIndex: '1000'
+  });
 
-  // Apply "Capture Mode" styles
-  element.style.width = '210mm';
-  element.style.minHeight = '297mm';
-  element.style.height = 'auto';
-  element.style.position = 'fixed';
-  element.style.top = '0';
-  element.style.left = '0';
-  element.style.zIndex = '999999';
-  element.style.transform = 'none';
-  element.style.margin = '0';
-  element.style.background = 'white';
-  element.style.display = 'block';
+  const opt = {
+    margin: 0,
+    filename: `Resume_${document.getElementById('nameIn').value || 'My'}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: {
+      scale: 1, // 1 is most stable for mobile
+      useCORS: true,
+      letterRendering: true,
+      windowWidth: 800,
+      logging: false
+    },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
 
-  // Ensure sidebar stretches
-  const sidebar = element.querySelector('.sidebar');
-  if (sidebar) {
-    sidebar.style.minHeight = '297mm';
-    sidebar.style.height = '100%';
-  }
-
-  setTimeout(() => {
-    const opt = {
-      margin: 0,
-      filename: `Resume_${document.getElementById('nameIn').value || 'My'}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: {
-        scale: 1.5, // Even lower scale for mobile memory
-        useCORS: true,
-        letterRendering: true,
-        scrollY: 0,
-        scrollX: 0,
-        windowWidth: 1024,
-        logging: false
-      },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: 'avoid-all' }
-    };
-
-    html2pdf().set(opt).from(element).save()
-      .then(() => {
-        // Restore original state
-        element.setAttribute('style', originalStyle);
-        if (body.contains(loading)) body.removeChild(loading);
-      })
-      .catch(err => {
-        console.error("PDF Error:", err);
-        element.setAttribute('style', originalStyle);
-        if (body.contains(loading)) body.removeChild(loading);
-        alert("Mobile limit reached. Please use the 'Print / Save as PDF' button instead.");
-      });
-  }, 1000);
+  // Use the worker API for better control
+  html2pdf().set(opt).from(element).toPdf().get('pdf').then((pdf) => {
+    // Check if the pdf is empty before saving
+    if (pdf.internal.pages.length <= 1 && pdf.internal.pageSize.width === 0) {
+      console.error("PDF generation failed or is empty");
+    }
+  }).save().then(() => {
+    element.setAttribute('style', originalStyle);
+    window.scrollTo(0, scrollY);
+    if (body.contains(loading)) body.removeChild(loading);
+  }).catch(err => {
+    console.error("PDF Fail:", err);
+    element.setAttribute('style', originalStyle);
+    window.scrollTo(0, scrollY);
+    if (body.contains(loading)) body.removeChild(loading);
+    alert("Mobile error. Please use the Print button instead.");
+  });
 }
 
 function printResume() {
