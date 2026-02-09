@@ -231,6 +231,8 @@ textarea:focus {
     background: white;
     width: 210mm;
     min-height: 296mm;
+    max-height: 296mm;
+    /* Strictly limit to one page */
     box-shadow: var(--shadow-lg);
     border-radius: 4px;
     overflow: hidden;
@@ -260,8 +262,9 @@ textarea:focus {
 
 /* Modern Resume Template Styles */
 .resume-container {
-    height: auto;
-    min-height: 297mm;
+    height: 100%;
+    min-height: 296mm;
+    max-height: 296mm;
     display: flex;
     /* Switched to flex for better capture compatibility */
     width: 100%;
@@ -275,14 +278,16 @@ textarea:focus {
     flex-direction: column;
     align-items: center;
     width: 32%;
-    min-height: 297mm;
+    height: 100%;
 }
 
 .main-content {
     width: 68%;
-    padding: 2.5rem 3rem;
+    padding: 2.5rem 2.5rem;
+    /* Reduced padding slightly to fit content */
     background: #fff;
-    min-height: 297mm;
+    height: 100%;
+    overflow: hidden;
 }
 
 /* Sidebar is now flex-based above */
@@ -449,27 +454,29 @@ textarea:focus {
         box-shadow: none;
         transform: scale(1) !important;
         width: 210mm !important;
-        height: auto !important;
+        height: 297mm !important;
         min-height: 297mm !important;
         margin: 0 !important;
         position: relative !important;
         display: block !important;
         visibility: visible !important;
+        overflow: hidden !important;
     }
 
     .resume-container {
         display: flex !important;
         width: 100% !important;
+        height: 100% !important;
     }
 
     .sidebar {
         width: 32% !important;
-        min-height: 297mm !important;
+        height: 100% !important;
     }
 
     .main-content {
         width: 68% !important;
-        min-height: 297mm !important;
+        height: 100% !important;
     }
 }
 

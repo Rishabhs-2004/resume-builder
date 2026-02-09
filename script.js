@@ -434,12 +434,14 @@ function downloadPDF() {
   const originalStyle = element.getAttribute('style') || '';
   Object.assign(element.style, {
     width: '210mm',
+    height: '297mm', // Fixed height
     minHeight: '297mm',
-    position: 'static', // Change from fixed to static for cleaner capture
+    position: 'static',
     display: 'block',
     transform: 'none',
     margin: '0 auto',
-    zIndex: '1000'
+    zIndex: '1000',
+    overflow: 'hidden' // Clip any extra content
   });
 
   const opt = {
@@ -447,13 +449,14 @@ function downloadPDF() {
     filename: `Resume_${document.getElementById('nameIn').value || 'My'}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: {
-      scale: 1, // 1 is most stable for mobile
+      scale: 1,
       useCORS: true,
       letterRendering: true,
       windowWidth: 800,
       logging: false
     },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: 'avoid-all' } // Avoid creating new pages
   };
 
   // Use the worker API for better control
