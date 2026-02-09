@@ -455,7 +455,7 @@ function downloadPDF() {
       filename: `Resume_${document.getElementById('nameIn').value || 'My'}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: {
-        scale: 2,
+        scale: 1.5, // Even lower scale for mobile memory
         useCORS: true,
         letterRendering: true,
         scrollY: 0,
@@ -477,9 +477,13 @@ function downloadPDF() {
         console.error("PDF Error:", err);
         element.setAttribute('style', originalStyle);
         if (body.contains(loading)) body.removeChild(loading);
-        alert("Error: Mobile memory full or browser limit. Try clearing tabs.");
+        alert("Mobile limit reached. Please use the 'Print / Save as PDF' button instead.");
       });
   }, 1000);
+}
+
+function printResume() {
+  window.print();
 }
 
 function resetForm() {
