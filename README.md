@@ -1,47 +1,96 @@
-# 🚀 Ultra Modern & AI-Powered Resume Builder
+# Resume Builder
 
-The ultimate professional tool for creating high-impact, industry-standard resumes. Built for the modern job seeker, integrated with **AI assistance**, **ATS optimization**, and **Real-time customization**.
+A smart and customizable web application for creating professional resumes with live preview, theme customization, QR code support, and PDF export.
 
-## 🔗 Live Demo
-**Check out the live app here: [https://rishabhs-2004.github.io/resume-builder/](https://rishabhs-2004.github.io/resume-builder/)**
+## Live Demo
 
----
+[View the live demo](https://rishabhs-2004.github.io/resume-builder/)
 
-## 🌟 Next-Generation Features
+## Overview
 
-- **🤖 AI ATS Assistant**: Get real-time keyword suggestions based on your target job role. Optimize your resume for industry-standard *Applicant Tracking Systems*.
-- **🪄 AI Magic Write**: One-click professional summary generation tailored to your job title.
-- **📱 Dynamic QR Code Integration**: Automatically generate a scan-able QR code for your LinkedIn, GitHub, or Portfolio website.
-- **📊 Skill Proficiency Bars**: Don't just list skills—visualize your expertise with dynamic progress bars and sliders.
-- **🎨 Custom Branding & Layouts**:
-  - **Color Picker**: Choose your signature theme color for a unique personal brand.
-  - **Multiple Layouts**: Toggle between *Classic Sidebar* and *Modern Top-Header* templates.
-  - **Typography Styles**: Switch between Modern (San-serif), Classic (Serif), and Elegant (Outfit) font moods.
-- **⚡ Real-time Live Preview**: Every stroke is reflected instantly on the professional preview pane.
-- **💾 Auto-Save Functionality**: Never lose your progress. All data is securely stored in your browser's local storage.
-- **📃 Professional PDF Export**: High-quality, print-ready PDF generation using `html2pdf.js`.
-- **🏆 Global Sections**: Includes Projects, Education, Work Experience, Languages, and Achievements.
+Resume Builder helps users create polished resumes without manually formatting documents in Word or static templates. The application updates the resume preview in real time, supports visual customization, and allows users to export the final resume as a PDF.
 
-## 🛠️ Tech Stack
+This project is suitable for:
 
-- **Frontend**: HTML5, Vanilla CSS3 (Custom Design System), JavaScript (ES6+)
-- **Icons**: Font Awesome 6 (Pro-style)
-- **Fonts**: Google Fonts (Inter, Outfit, Playfair Display)
-- **Engines**: 
-  - [html2pdf.js](https://ekoopmans.github.io/html2pdf.js/) for PDF Generation
-  - [QRServer API](http://goqr.me/api/) for real-time QR generation
+- students
+- freshers
+- job seekers
+- working professionals
 
-## 🚀 How to Use
+## Features
 
-1. **Brand Your CV**: Start by choosing your theme color and font mood in the *Typography & Branding* section.
-2. **Fill Your Profile**: Enter your info, and use the **AI Suggest** button to write a catchy summary.
-3. **Optimize with ATS**: Look at the *AI ATS Assistant* box to see which keywords recruiters are looking for. Click a tag to add it instantly.
-4. **Interactive Skills**: Use the sliders to rank your proficiency in each skill.
-5. **Add Digital Links**: Paste your LinkedIn URL in the QR Code field to add a professional scan-able link.
-6. **Deploy & Download**: Your progress saves automatically. Once done, hit **Download PDF**.
+- Real-time resume preview while typing
+- Multiple resume layouts including Classic Sidebar and Modern Top-Header
+- Theme color customization
+- Typography switching
+- Dark mode toggle
+- Dynamic sections for projects, work experience, education, skills, languages, and achievements
+- Profile image upload
+- Skill proficiency sliders with visual progress bars
+- Job-title-based summary suggestion
+- ATS-style keyword suggestions
+- QR code generation for LinkedIn, GitHub, or portfolio links
+- Auto-save using browser localStorage
+- Print support
+- PDF export using `html2pdf.js`
+- Responsive interface for desktop and mobile
 
+## Tech Stack
 
----
+- HTML5
+- CSS3
+- JavaScript
+- Font Awesome
+- Google Fonts
+- `html2pdf.js`
+- QRServer API
 
----
-Developed with ❤️ by [Rishabh](https://github.com/Rishabhs-2004)
+## How It Works
+
+1. Enter personal and professional information.
+2. Add sections such as projects, education, experience, skills, languages, and achievements.
+3. Customize the resume using layout, font, theme color, and dark mode options.
+4. Add a QR-enabled profile or portfolio link.
+5. Review changes instantly in the live preview.
+6. Print or download the final resume as a PDF.
+
+## Project Highlights
+
+- Built a clean two-panel interface with form input on one side and resume preview on the other
+- Implemented dynamic DOM updates for a smooth live editing experience
+- Added client-side persistence so users do not lose progress on refresh
+- Designed the resume output to stay printable and export-friendly
+
+## Project Structure
+
+```text
+resume_builder-main/
+|-- index.html
+|-- style.css
+|-- script.js
+|-- README.md
+|-- images/
+```
+
+## Run Locally
+
+Since this is a frontend-only project, no build setup is required.
+
+1. Clone or download the repository.
+2. Open `index.html` in your browser.
+
+## What I Learned
+
+This project helped me improve my understanding of:
+
+- DOM manipulation with JavaScript
+- dynamic form handling
+- real-time preview rendering
+- responsive UI design
+- client-side storage with localStorage
+- PDF generation in web applications
+- building user-friendly productivity tools
+
+## Author
+
+Developed by [Rishabh](https://github.com/Rishabhs-2004)
